@@ -1,0 +1,36 @@
+name: Deploy with VPN and SSH
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Installation de OpenConnect et sshpass
+    - name: Install OpenConnect and sshpass
+      run: sudo apt-get update && sudo apt-get install -y openconnect sshpass rsync
+
+    # Connexion au VPN AnyConnect
+    - name: Connect to VPN
+      run: |
+        echo "${{ secrets.VPN_PASSWORD }}" | sudo openconnect --background --user=${{ secrets.VPN_USERNAME }} --passwd-on-stdin vpn.univ-lorraine.fr
+
+    # Attendre que la connexion VPN soit établie
+    - name: Wait for VPN connection
+      run: sleep 10 && curl ifconfig.me
+
+    # Copier les fichiers du dépôt sur le serveur distant
+    - name: Copy repository files to remote server
+      run: |
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
+
+
+
+    # Déconnexion du VPN après le déploiement
+    - name: Disconnect VPN
+      if: always()
+      run: sudo pkill openconnect
