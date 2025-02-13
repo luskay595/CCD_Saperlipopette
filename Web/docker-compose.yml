@@ -22,7 +22,7 @@ services:
     image: node:22
     restart: always
     ports:
-      - '40020:5173'
+      - '40025:5173'
     working_dir: /app
     volumes:
       - ./Frontend/app:/app
@@ -37,7 +37,7 @@ services:
     image: adminer
     restart: always
     ports:
-    - '40015:8080'
+    - '40026:8080'
     networks:
       - serviceDating
     command: 'php -S 0.0.0.0:8080 -t /var/www/html'
@@ -51,7 +51,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40003:80'
+      - '40012:80'
     volumes:
       - ./api_auth/app/:/var/php/
     env_file:
@@ -66,7 +66,7 @@ services:
     restart: always
     env_file: ./authdb.env
     ports:
-      - '40004:5432'
+      - '40013:5432'
     volumes:
       - db_auth:/var/lib/postgresql/data
     networks:
@@ -81,7 +81,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40001:80'
+      - '40014:80'
     working_dir: /var/php
     volumes:
       - ./api_clients/app/:/var/php/
@@ -94,7 +94,7 @@ services:
     restart: always
     env_file: ./env/db.env
     ports:
-      - '40002:5432'
+      - '40015:5432'
     volumes:
       - db_clients:/var/lib/postgresql/data
     networks:
@@ -109,7 +109,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40005:80'
+      - '40016:80'
     working_dir: /var/php
     volumes:
       - ./api_besoins/app/:/var/php/
@@ -122,7 +122,7 @@ services:
     restart: always
     env_file: ./env/db.env
     ports:
-      - '40006:5432'
+      - '40017:5432'
     volumes:
       - db_besoins:/var/lib/postgresql/data
     networks:
@@ -137,7 +137,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40007:80'
+      - '40018:80'
     working_dir: /var/php
     volumes:
       - ./api_services/app/:/var/php/
@@ -150,7 +150,7 @@ services:
     restart: always
     env_file: ./env/db.env
     ports:
-      - '40008:5432'
+      - '40019:5432'
     volumes:
       - db_services:/var/lib/postgresql/data
     networks:
@@ -165,7 +165,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40009:80'
+      - '40020:80'
     working_dir: /var/php
     volumes:
       - ./api_competences/app/:/var/php/
@@ -178,7 +178,7 @@ services:
     restart: always
     env_file: ./env/db.env
     ports:
-      - '40010:5432'
+      - '40021:5432'
     volumes:
       - db_competences:/var/lib/postgresql/data
     networks:
@@ -193,7 +193,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40011:80'
+      - '40022:80'
     working_dir: /var/php
     volumes:
       - ./api_salaries/app/:/var/php/
@@ -206,7 +206,7 @@ services:
     restart: always
     env_file: ./env/db.env
     ports:
-      - '40012:5432'
+      - '40023:5432'
     volumes:
       - db_salaries:/var/lib/postgresql/data
     networks:
@@ -221,7 +221,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40000:80'
+      - '40024:80'
     volumes:
       - ./gateway/app/:/var/php/
     working_dir: /var/php
