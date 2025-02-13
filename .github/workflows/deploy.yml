@@ -41,24 +41,6 @@ jobs:
         send \"${{ secrets.SSH_PASSWORD }}\r\"
         expect eof
         "
-    - name: Debug SSH Environment
-      run: |
-        expect -c "
-        spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"whoami && echo \\$SHELL && env && systemctl is-active docker && docker ps\"
-        expect \"password:\"
-        send \"${{ secrets.SSH_PASSWORD }}\r\"
-        expect eof
-        "
-
-    # Assurer que le script est exécutable et l'exécuter
-    - name: Run deployment script
-      run: |
-        expect -c "
-        spawn ssh -tt -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"script -q -c 'cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette && chmod +x deploy.sh && ./deploy.sh' /dev/null\"
-        expect \"password:\"
-        send \"${{ secrets.SSH_PASSWORD }}\r\"
-        expect eof
-        "
 
     # Déconnexion du VPN après le déploiement
     - name: Disconnect VPN
