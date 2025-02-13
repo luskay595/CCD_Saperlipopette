@@ -11,7 +11,8 @@ app.use(express.json());
 
 // Route simple
 app.get('/', (req, res) => {
-  res.send('Bienvenue sur mon API Express en JavaScript ! 🚀');
+  //
+  res.send(buildAffectation("./data/01_pb_simples/Probleme_1_nbSalaries_3_nbClients_3_nbTaches_2.csv"));
 });
 
 // Gestion des erreurs

@@ -67,37 +67,46 @@ export function loadCSV(filename) {
 
 export function constructClients(rawClients) {
     var clients = [];
-    console.log(rawClients);
-    for (var rawClient in rawClients) {
+    for (var rawClient of rawClients) {
         // Vérifier que le client n'est pas déjà dans la liste
         var inList = false;
+        let need = { "type": rawClient[2], isAffected: false };
         for (var i = 0; i < clients.length; i++) {
             if (clients[i]["name"] == rawClient[1]) {
                 inList = true;
-                clients[i].needs.push(rawClient[2]);
+                clients[i].needs.push(need);
             }
         }
         if (!inList) {
-            clients.push({ "name": rawClient[1], "needs": [rawClient[2]] });
+            clients.push({ "name": rawClient[1], "needs": [need] });
         }
     }
-    //console.log(clients)
     return clients;
 }
 
 export function constructWorkers(rawWorkers) {
     var workers = [];
+
     for (var rawWorker of rawWorkers) {
-        // Vérifier que le client n'est pas déjà dans la liste
+        // Vérifier que le travailleur n'est pas déjà dans la liste
         var inList = false;
+        let type = rawWorker[2]
+        let skillNote = rawWorker[3]
+        let skill = {};
+        skill[type] = parseInt(skillNote)
+
+
         for (var i = 0; i < workers.length; i++) {
             if (workers[i]["name"] == rawWorker[1]) {
-                inList = true;
-                workers[i].skills.push({ "type": rawWorker[2], "preference": rawWorker[3] });
+                var inList = true;
+                workers[i].skills[type] = skillNote;
             }
         }
+
         if (!inList) {
-            workers.push({ "name": rawWorker[1], "skills": [{ "type": rawWorker[2], "preference": rawWorker[3] }] });
+            let worker = { "name": rawWorker[1], "skills": { BR: 0, JD: 0, MN: 0, IF: 0, AD: 0 } };
+            worker.skills[type] = skillNote
+            workers.push(worker);
         }
     }
     return workers;

@@ -29,7 +29,6 @@ export function solveGlouton(problem) {
 
     //console.log(problem.clients);
     let nbNeedMax = problem.clients[0].needs.length;
-    let solving = true;
 
     // On cherche le nombre de besoins max
     for (let i = 1; i < problem.clients.length; i++) {
@@ -39,15 +38,16 @@ export function solveGlouton(problem) {
 
     for (let cycleCount = 0; cycleCount < nbNeedMax; cycleCount++) {
         for (let i = 0; i < problem.clients.length; i++) { // clients undefined
-            if (problem.clients[i].needs.length <= nbNeedMax)
+            if (problem.clients[i].needs.length <= cycleCount)
                 continue;
 
-            currentNeed = problem.clients[i].needs[cycleCount];
+            let currentNeed = problem.clients[i].needs[cycleCount];
 
             let worker = selectFreeWorker(problem.workers, currentNeed.type);
 
+            if (worker == null)
+                continue;
             // post-traitement
-            problem.workers.remove(worker);
             currentNeed.isAffected = true;
 
             // creation de la tache 
@@ -55,9 +55,10 @@ export function solveGlouton(problem) {
             task.worker = worker;
             task.need = currentNeed;
             task.client = problem.clients[i];
-            task.score = worker.preference[currentNeed.type];
+            task.score = parseInt(worker.skills[currentNeed.type]);
 
-            affectation.tasks.add(task);
+
+            affectation.tasks.push(task);
         }
     }
     return affectation;
@@ -67,17 +68,22 @@ export function solveGlouton(problem) {
  * Selectionne un travailleur disponible selon un type recherche
  */
 function selectFreeWorker(freeWorkers, searchedType) {
-    currentWorker = {};
+    let currentWorker = null;
 
+    let currentSkillPref = 0;
+
+    let w;
     // On selectionne le meilleur travailleur,
-    for (let w = 0; w < freeWorkers.length; w++) {
-        if (currentWorker == {} || isWorkerValid(freeWorkers[i], searchedType, currentWorker.skills[searchedType].preference)) {
+    for (w = 0; w < freeWorkers.length; w++) {
+        if (isWorkerValid(freeWorkers[w], searchedType, currentSkillPref)) {
             currentWorker = freeWorkers[w];
+            currentSkillPref = currentWorker.skills[searchedType]
         }
     }
 
     // On marque le travailleur comme affecte
-    currentWorker.isAffected = true;
+    if (currentWorker != null)
+        currentWorker.isAffected = true;
     return currentWorker;
 }
 
@@ -91,5 +97,5 @@ function isWorkerValid(worker, searchedType, skillPref) {
     // On verifie si le travailleur possede le type recherche
     // S'il n est pas deja affecte,
     // skillPref < worker.skills[searchedType]
-    return worker.skills[searchedType] && !worker.isAffected && skillPref < worker.skills[searchedType]
+    return worker.skills[searchedType] && worker.isAffected != true && skillPref < worker.skills[searchedType]
 }
