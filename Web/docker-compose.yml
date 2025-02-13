@@ -1,0 +1,230 @@
+volumes:
+  db_clients:
+    driver: local
+  db_auth:
+    driver: local
+  db_besoins:
+    driver: local
+  db_services:
+    driver: local
+  db_competences:
+    driver: local
+  db_salaries:
+    driver: local
+
+networks:
+  serviceDating:
+    driver: bridge
+
+services:
+
+  frontend:
+    image: node:22
+    restart: always
+    ports:
+      - '40020:5173'
+    working_dir: /app
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - serviceDating
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - '40015:8080'
+    networks:
+      - serviceDating
+    command: 'php -S 0.0.0.0:8080 -t /var/www/html'
+
+  ################################
+  #              AUTH            #
+  ################################
+  api_auth:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40003:80'
+    volumes:
+      - ./api_auth/app/:/var/php/
+    env_file:
+      - ./env/api.env
+    working_dir: /var/php
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  auth.db:
+    image: 'postgres:latest'
+    restart: always
+    env_file: ./authdb.env
+    ports:
+      - '40004:5432'
+    volumes:
+      - db_auth:/var/lib/postgresql/data
+    networks:
+      - serviceDating
+
+  ################################
+  #          clients             #
+  ################################
+  api_clients:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40001:80'
+    working_dir: /var/php
+    volumes:
+      - ./api_clients/app/:/var/php/
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  db_clients:
+    image: 'postgres:latest'
+    restart: always
+    env_file: ./env/db.env
+    ports:
+      - '40002:5432'
+    volumes:
+      - db_clients:/var/lib/postgresql/data
+    networks:
+      - serviceDating
+
+  ################################
+  #          besoins             #
+  ################################
+  api_besoins:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40005:80'
+    working_dir: /var/php
+    volumes:
+      - ./api_besoins/app/:/var/php/
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  db_besoins:
+    image: 'postgres:latest'
+    restart: always
+    env_file: ./env/db.env
+    ports:
+      - '40006:5432'
+    volumes:
+      - db_besoins:/var/lib/postgresql/data
+    networks:
+      - serviceDating
+  
+  ################################
+  #          services            #
+  ################################
+  api_services:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40007:80'
+    working_dir: /var/php
+    volumes:
+      - ./api_services/app/:/var/php/
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  db_services:
+    image: 'postgres:latest'
+    restart: always
+    env_file: ./env/db.env
+    ports:
+      - '40008:5432'
+    volumes:
+      - db_services:/var/lib/postgresql/data
+    networks:
+      - serviceDating
+
+  ################################
+  #          compétences         #
+  ################################
+  api_competences:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40008:80'
+    working_dir: /var/php
+    volumes:
+      - ./api_competences/app/:/var/php/
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  db_competences:
+    image: 'postgres:latest'
+    restart: always
+    env_file: ./env/db.env
+    ports:
+      - '40010:5432'
+    volumes:
+      - db_competences:/var/lib/postgresql/data
+    networks:
+      - serviceDating
+
+  ################################
+  #          salariés            #
+  ################################
+  api_salaries:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40011:80'
+    working_dir: /var/php
+    volumes:
+      - ./api_salaries/app/:/var/php/
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  db_salaries:
+    image: 'postgres:latest'
+    restart: always
+    env_file: ./env/db.env
+    ports:
+      - '40012:5432'
+    volumes:
+      - db_salaries:/var/lib/postgresql/data
+    networks:
+      - serviceDating
+
+  ################################
+  #           GATEWAY            #
+  ################################
+  gateway:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    restart: always
+    ports:
+      - '40000:80'
+    volumes:
+      - ./gateway/app/:/var/php/
+    working_dir: /var/php
+    networks:
+      - serviceDating
+    command: php -S 0.0.0.0:80 -t /var/php/public
