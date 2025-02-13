@@ -29,30 +29,18 @@ jobs:
           mkdir -p /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette
         "
 
+    # Copier tous les fichiers du dépôt + deploy.sh vers le serveur distant
     - name: Copy repository files to remote server
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
 
-    # Démarrer `docker-compose` dans `CCD_Saperlipopette/Web`
-    - name: Run docker-compose in Web directory
+    # Assurer que le script est exécutable et l'exécuter
+    - name: Run deployment script
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-          cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/Web && 
-          docker compose up -d
-        "
-
-    - name: Stop old mon-projet container in Opti
-      run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-          docker ps -q --filter ancestor=mon-projet | xargs -r docker stop
-        "
-
-    - name: Build and Run mon-projet in Opti
-      run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-          cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/Opti && 
-          docker build -t mon-projet . && 
-          docker run -d -p 40027:3000 mon-projet
+          cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette &&
+          chmod +x deploy.sh &&
+          ./deploy.sh
         "
 
     # Déconnexion du VPN après le déploiement
