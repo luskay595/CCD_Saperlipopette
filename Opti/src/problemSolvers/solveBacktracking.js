@@ -1,94 +1,98 @@
+import { evaluate } from "../evaluator.js";
 
 /**
 clients = [
-    {"name" : "ALBERT", "needs" : {"type" : "BR", }]}
+    {"name" : "ALBERT", "needs" : [{"type" : "BR", "isAffected" : false}]]},
+    {"name" : "JEAN", "needs" : [{"type" : "AA", "isAffected" : false}, {"type" : "BB", "affected" : false}]}
 ]
 
 workers = [
     {"name" : "JEAN",
-    "skills" : [{
-        "type" : "AA",
-        "preference" : 1
-    },
-    {"type" : "BA",
-    "preference" : 3
-    }]},
+    "skills": { BR: 4, JD: 0, MN: 0, IF: 0, AD: 0 }},
     {"name" : "JILLE",
-    "skills" : {
-        "BA" : 2,
-        "AA" : 3
-    }}
+    "skills": { BR: 0, JD: 3, MN: 2, IF: 0, AD: 0 }}
 ]
  */
 
-export function solveBacktracking(workers, clients) {
+export function solveBacktracking(problem) {
     const affectation = {};
-    affectation.workers = workers;
-    affectation.clients = clients;
+    // Travailleurs non-affectés
+    affectation.workers = problem.workers;
+    affectation.clients = problem.clients;
     affectation.tasks = [];
 
-    let nbNeedMax = clients[0].needs.length;
-    solving = true;
-
-    // On cherche le nombre de besoins max
-    for (let i = 1; i < clients.length; i++) {
-        if (nbNeedMax < clients[i].needs.length)
-            nbNeedMax = clients[i].needs.length;
-    }
-
-    for (let cycleCount = 0; cycleCount < nbNeedMax; cycleCount++) {
-        for (let i = 0; i < clients.length; i++) {
-            if (clients[i].needs.length <= nbNeedMax)
-                continue;
-
-            currentNeed = clients[i].needs[cycleCount];
-
-            let worker = selectFreeWorker(workers, currentNeed.type);
-
-            // post-traitement
-            workers.remove(worker);
-            currentNeed.isAffected = true;
-
-            // creation de la tache 
-            let task = {};
-            task.worker = worker;
-            task.need = currentNeed;
-            task.client = clients[i];
-            task.score = worker.preference[currentNeed.type];
-
-            affectation.tasks.add(task);
-        }
-    }
-    return affectation;
+    return exploration(affectation);
 }
 
 /**
- * Selectionne un travailleur disponible selon un type recherche
+ * Fonction recusrvie d'exploration de l'arbre
  */
-function selectFreeWorker(freeWorkers, searchedType) {
-    currentWorker = {};
+function exploration(affectation) {
+    //Parcours de chaque enfant
+    //Un enfant = un worker associé à une need demandée par un client
+    if (affectation.workers.length > 0) {
+        //Récupération des actions a effectuer
+        var actions = getActions(affectation)
 
-    // On selectionne le meilleur travailleur,
-    for (let w = 0; w < freeWorkers.length; w++) {
-        if (currentWorker == {} || isWorkerValid(freeWorkers[i], searchedType, currentWorker.skills[searchedType].preference)) {
-            currentWorker = freeWorkers[w];
+        var bestNodeEvaluation = 0
+        //Parcours des noeuds enfants
+        for (var action of actions) {
+            //Suppression du worker récupéré
+            var i = 0;
+            for (const worker of affectation.workers) {
+                if (worker.name == action.worker.name) {
+                    affectation.workers.splice(i, 1)
+                }
+                i++
+            }
+            //Le besoin du client est satisfait
+            action.currentNeed.isAffected = true;
+
+            var task = { "worker": action.worker, "need": action.currentNeed, "client": action.client, "score": action.worker.skills[action.currentNeed.type] }
+            affectation.tasks.push(task)
+
+            //Récursivité
+            var nodeEvaluation = exploration(affectation)
+            //Choix du meilleur
+            if (nodeEvaluation > bestNodeEvaluation) {
+                bestNodeEvaluation = nodeEvaluation
+            } else {
+                affectation.workers.push(action.worker)
+                var i = 0;
+                for (const taskAffectation of affectation.tasks) {
+                    if (taskAffectation.client.name == task.client.name && taskAffectation.need.type == task.need.type) {
+                        affectation.tasks.splice(i, 1)
+                    }
+                    i++
+                }
+            }
         }
     }
-
-    // On marque le travailleur comme affecte
-    currentWorker.isAffected = true;
-    return currentWorker;
+    //S'il n'y a plus de worker, on évalue la fonction
+    else {
+        return evaluate(affectation);
+    }
 }
 
 /**
- * Verifie si le travailleur est bien valide pour la tache demandee
- * worker       : le travailleur dont il est question
- * searchedType : type de travaille voulu
- * skillPref    : type de travaille prefere
+ * Prends l'état du problème actuel en paramètre
+ * Renvoie la liste des actions possibles depuis un noeud [{"client":client1, "currentNeed":currentNeed1, "worker":worker1}, {name_cleint2, code, name_worker2}
  */
-function isWorkerValid(worker, searchedType, skillPref) {
-    // On verifie si le travailleur possede le type recherche
-    // S'il n est pas deja affecte,
-    // skillPref < worker.skills[searchedType]
-    return worker.skills[searchedType] && !worker.isAffected && skillPref < worker.skills[searchedType]
+function getActions(affectation) {
+    var actions = []
+    for (var client of affectation.clients) {
+        for (var need of client.needs) {
+            if (need.isAffected == false) {
+                for (var worker of affectation.workers) {
+                    for (var keySkill in worker.skills) {
+                        //Si le worker fait le travail et que son skill correspond au travail
+                        if (worker.skills[keySkill] > 0 && keySkill == need.type) {
+                            actions.push({ "client": client, "currentNeed": need, "worker": worker })
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return actions
 }

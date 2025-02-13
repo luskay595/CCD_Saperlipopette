@@ -1,3 +1,4 @@
+import fsAsynch from "fs/promises";
 import fs from "fs";
 import { resourceUsage } from 'process';
 
@@ -110,4 +111,48 @@ export function constructWorkers(rawWorkers) {
         }
     }
     return workers;
+}
+
+export async function findPath(categ, id) {
+    let ident = id;
+    if(ident == 0){
+        ident = 1
+    }
+    let pathToData = "./data/";
+    let categorie = "";
+
+    switch (categ) {
+        case "pb_simple":
+            categorie = "01_pb_simples/"
+            if(ident > 9){
+                ident = 9
+            }
+            break;
+        case "pb_complexe":
+            categorie = "02_pb_complexes/"
+            if(ident > 10){
+                ident = 10
+            }
+            break;
+        default:
+            console.error("Invalide")
+            break;
+    }
+    let pathToFiles = pathToData + categorie;
+
+
+    // Lire les fichiers du répertoire
+
+    // TEST
+    try {
+        const files = await fsAsynch.readdir(pathToFiles);
+
+
+        let file = files.filter(f => !f.includes("Sol")).filter(f => f.includes("Probleme_" + id + "_"))
+
+        return pathToFiles + file;
+    } catch (error) {
+        console.error(" Erreur lors de la lecture du répertoire :", error);
+        return null;
+    }
 }
