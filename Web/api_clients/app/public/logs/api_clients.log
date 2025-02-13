@@ -1,0 +1,2 @@
+[2025-02-13T21:21:19.459762+00:00] api_clients.ERROR: CreateClient : api_clients\core\dto\ClientDTO::getId(): Return value must be of type int, string returned [] []
+[2025-02-13T21:21:43.776508+00:00] api_clients.INFO: CreateClient : f5dbc648-a170-4ea3-b896-7a278c765600 [] []

@@ -1,29 +1,35 @@
 <?php
-namespace api_clients\application\actions;
+namespace api_clients\core\services\clients;
 
+use api_clients\core\domain\entities\Clients\Client;
 use api_clients\core\dto\DTO;
+use api_clients\infrastructure\repository\ClientRepository;
 
-
-class ServiceClients
+class ServiceClients implements ServiceClientInterface
 {
-    private $clientRepo;
+    private ClientRepository $clientRepo;
 
-    public function __construct($clientRepo)
+    public function __construct(ClientRepository $clientRepo)
     {
         $this->clientRepo = $clientRepo;
     }
 
-    public function getClientById(int $id): DTO
+    public function getAllClients(): array
+    {
+        return $this->clientRepo->getAllClients();
+    }
+
+    public function getClientById($id): Client
     {
         return $this->clientRepo->getClientById($id);
     }
 
-    public function getClientByName(string $nom): DTO
+    public function getClientByNom(string $nom): Client
     {
-        return $this->clientRepo->getClientByName($nom);
+        return $this->clientRepo->getClientByNom($nom);
     }
 
-    public function createClient(int $id, string $nom): void
+    public function createClient(string $id, string $nom): void
     {
         $this->clientRepo->createClient($id, $nom);
     }

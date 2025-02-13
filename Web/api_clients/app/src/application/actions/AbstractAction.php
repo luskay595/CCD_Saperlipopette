@@ -1,5 +1,6 @@
 <?php
 
+namespace api_clients\application\actions;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
