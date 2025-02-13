@@ -1,20 +1,20 @@
-# Utilisation d'une image légère Node.js
+# Utilisation de l'image Node.js alpine pour une légèreté optimale
 FROM node:22-alpine
 
 # Définition du répertoire de travail
 WORKDIR /app
 
-# Copier uniquement les fichiers nécessaires pour installer les dépendances
+# Copie des fichiers package.json et package-lock.json avant installation des dépendances
 COPY package.json package-lock.json ./
 
-# Installation des dépendances en mode production
+# Installation des dépendances
 RUN npm install --only=production
 
-# Copier le reste des fichiers du projet
+# Copie du reste des fichiers dans l'image
 COPY . .
 
-# Exposition du port utilisé par Express
+# Exposition du port 3000 pour l'application Express
 EXPOSE 3000
 
-# Démarrer l'application en précisant le bon chemin vers index.js
-CMD ["node", "src/index.js"]
+# Commande pour exécuter l'application
+CMD ["node", "index.js"]
