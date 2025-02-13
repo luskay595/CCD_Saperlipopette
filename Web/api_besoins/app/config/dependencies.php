@@ -21,6 +21,13 @@ return [
         return new BesoinRepository($c->get('pdo'));
     },
 
+    'logger' => function(ContainerInterface $c) {
+        $logger = new Monolog\Logger('api_besoins');
+        $file_handler = new Monolog\Handler\StreamHandler('logs/api_besoins.log');
+        $logger->pushHandler($file_handler);
+        return $logger;
+    },
+
     ServiceBesoinsInterface::class => function(ContainerInterface $c) {
         return new ServiceBesoins($c->get('repositoryBesoin'));
     },
@@ -34,7 +41,7 @@ return [
     },
 
     CreateBesoinAction::class => function(ContainerInterface $c) {
-        return new api_besoins\application\actions\CreateBesoinAction($c->get(ServiceBesoinsInterface::class), "logger");
+        return new api_besoins\application\actions\CreateBesoinAction($c->get(ServiceBesoinsInterface::class), $c->get('logger'));
     },
 
 ];

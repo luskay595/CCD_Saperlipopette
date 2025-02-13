@@ -39,14 +39,12 @@ class CreateBesoinAction extends AbstractAction
             $rdvInputValidator->assert($jsonRdv);
 
             // Create BesoinsDTO object
-            echo "avant besoinDTO";
             $besoin = new InputBesoinsDTO(
                 $jsonRdv['libelle'],
                 $jsonRdv['client_nom'],
                 $jsonRdv['competence_type'],
                 []
             );
-            echo "apres besoinDTO";
 
             // Call service to create besoin
             $this->serviceBesoins->createBesoin(
