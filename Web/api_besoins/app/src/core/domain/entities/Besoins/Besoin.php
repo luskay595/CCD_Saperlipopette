@@ -11,6 +11,25 @@ class Besoin extends DTO{
     public $competence_type;
     public $services;
 
+    public function getId(){
+        return $this->id;
+    }
+
+    public function getLibelle(){
+        return $this->libelle;
+    }
+
+    public function getClientNom(){
+        return $this->client_nom;
+    }
+
+    public function getCompetenceType(){
+        return $this->competence_type;
+    }
+
+    public function getServices(){
+        return $this->services;
+    }
     public function __construct($id, $libelle, $client_nom, $competence_type, $services){
         $this->id = $id;
         $this->libelle = $libelle;
@@ -18,6 +37,5 @@ class Besoin extends DTO{
         $this->competence_type = $competence_type;
         $this->services = $services;
     }
-
 
 }
