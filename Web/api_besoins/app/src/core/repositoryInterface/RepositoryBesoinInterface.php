@@ -1,6 +1,6 @@
 <?php
 
-namespace api_besoins\core\repositoryInterfaces;
+namespace api_besoins\core\repositoryInterface;
 
 use api_besoins\core\domain\entities\besoins\Besoin;
 

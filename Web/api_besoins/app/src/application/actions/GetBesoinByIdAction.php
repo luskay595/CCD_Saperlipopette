@@ -18,12 +18,16 @@ class GetBesoinByIdAction extends AbstractAction
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
     {
+        try{
         $id = $args['id'];
-        $partie = $this->serviceBesoin->getBesoinById($id);
+        $besoin = $this->serviceBesoin->getBesoinById($id);
         $data = [
             'type' => 'ressource',
-            'partie' => $partie,
+            'besoin' => $besoin,
         ];
         return JSONRenderer::render($rs, 200, $data);
+        }catch(\Exception $e){
+            return JSONRenderer::render($rs, 404, ['error' => $e->getMessage()]);
+        }
     }
 }
