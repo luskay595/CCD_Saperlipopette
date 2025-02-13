@@ -44,7 +44,7 @@ jobs:
     - name: Debug SSH Environment
       run: |
         expect -c "
-        spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"whoami && echo \$SHELL && env && systemctl is-active docker && docker ps\"
+        spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"whoami && echo \\$SHELL && env && systemctl is-active docker && docker ps\"
         expect \"password:\"
         send \"${{ secrets.SSH_PASSWORD }}\r\"
         expect eof
