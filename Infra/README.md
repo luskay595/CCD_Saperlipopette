@@ -1,4 +1,4 @@
-# Infrastructure de Déploiement
+# Partie Infrastructure de Déploiement
 
 Ce projet a été conçu et mis en place par **VANNESTE Lucas (DACS)**.
 
