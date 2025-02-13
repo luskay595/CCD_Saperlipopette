@@ -165,7 +165,7 @@ services:
       dockerfile: 8.3-cli.Dockerfile
     restart: always
     ports:
-      - '40008:80'
+      - '40009:80'
     working_dir: /var/php
     volumes:
       - ./api_competences/app/:/var/php/
