@@ -15,11 +15,14 @@ workers = [
  */
 
 export function solveBacktracking(problem) {
-    const affectation = {};
+    const affectation = {}
     // Travailleurs non-affectés
-    affectation.workers = problem.workers;
-    affectation.clients = problem.clients;
-    affectation.tasks = [];
+    affectation.workers = problem.workers
+    affectation.clients = problem.clients
+    affectation.tasks = []
+    affectation.score = 0
+    affectation.bestScore = 0
+    affectation.count = 0
 
     return exploration(affectation);
 }
@@ -28,13 +31,12 @@ export function solveBacktracking(problem) {
  * Fonction recusrvie d'exploration de l'arbre
  */
 function exploration(affectation) {
-    //Parcours de chaque enfant
-    //Un enfant = un worker associé à une need demandée par un client
+    affectation.count++
+    //Parcours de chaque enfant ; Un enfant = un worker associé à une need demandée par un client
     if (affectation.workers.length > 0) {
         //Récupération des actions a effectuer
         var actions = getActions(affectation)
 
-        var bestNodeEvaluation = 0
         //Parcours des noeuds enfants
         for (var action of actions) {
             //Suppression du worker récupéré
@@ -48,17 +50,22 @@ function exploration(affectation) {
             //Le besoin du client est satisfait
             action.currentNeed.isAffected = true;
 
+            //nouvelle tâche créée
             var task = { "worker": action.worker, "need": action.currentNeed, "client": action.client, "score": action.worker.skills[action.currentNeed.type] }
             affectation.tasks.push(task)
 
             //Récursivité
-            var nodeEvaluation = exploration(affectation)
+            exploration(affectation)
+
             //Choix du meilleur
-            if (nodeEvaluation > bestNodeEvaluation) {
-                bestNodeEvaluation = nodeEvaluation
-            } else {
+            if (affectation.score > affectation.bestScore) {
+                affectation.bestScore = affectation.score
+            }
+            else {
+                //Si l'action n'est pas bonne on remet le worker et on enlève la tâche aujoutée et sa validation chez le client
+                action.currentNeed.isAffected = false
                 affectation.workers.push(action.worker)
-                var i = 0;
+                var i = 0
                 for (const taskAffectation of affectation.tasks) {
                     if (taskAffectation.client.name == task.client.name && taskAffectation.need.type == task.need.type) {
                         affectation.tasks.splice(i, 1)
@@ -67,10 +74,12 @@ function exploration(affectation) {
                 }
             }
         }
+        return affectation
     }
-    //S'il n'y a plus de worker, on évalue la fonction
+    //S'il n'y a plus de worker, on évalue la liste des tâches 
     else {
-        return evaluate(affectation);
+        affectation.score = evaluate(affectation)
+        return affectation
     }
 }
 

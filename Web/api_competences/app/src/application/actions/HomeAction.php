@@ -1,12 +1,10 @@
 <?php
-
-namespace api_clients\application\actions;
+namespace api_competences\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use api_clients\application\actions\AbstractAction;
 
- class HomeAction extends AbstractAction
+ class HomeAction extends \api_besoins\application\actions\AbstractAction
  {
 
 

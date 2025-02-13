@@ -7,7 +7,6 @@ export function evaluate(affectation) {
 
     let clientsAlreadyHelped = {};
 
-    // console.log("evaluate : tasks", affectation.tasks);
     for (let i = 0; i < affectation.tasks.length; i++) {
         let task = affectation.tasks[i];
         score += parseInt(task.score);
