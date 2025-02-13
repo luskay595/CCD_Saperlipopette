@@ -17,7 +17,7 @@ jobs:
     # Connexion au VPN AnyConnect
     - name: Connect to VPN
       run: |
-        echo "${{ secrets.VPN_PASSWORD }}" | sudo openconnect --background --user=${{ secrets.VPN_USERNAME }} --passwd-on-stdin vpn.univ-lorraine.fr
+        echo "${{ secrets.VPN_PASSWORD }}" | sudo openconnect --background --user=${{ secrets.VPN_USERNAME }} --authgroup=Universite-de-Lorraine --passwd-on-stdin vpn.univ-lorraine.fr
 
     # Attendre que la connexion VPN soit établie
     - name: Wait for VPN connection
