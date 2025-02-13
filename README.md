@@ -16,6 +16,9 @@
     - [Lien vers le fork](https://github.com/luskay595/CCD_Saperlipopette)
 - [Lien vers l'API back partie web](http://docketu.iutnc.univ-lorraine.fr:40016/besoins/1)
 - [Lien vers l'API back partie opti](http://docketu.iutnc.univ-lorraine.fr:40027/pb_complexe/7)
+- [Lien avec l'API client](http://docketu.iutnc.univ-lorraine.fr:40014/)
+- [Lien vers l'API de gestion de bd](http://docketu.iutnc.univ-lorraine.fr:40026/)
+- [Lien avec l'API front web](http://docketu.iutnc.univ-lorraine.fr:40025/)
 
 ##  Partie application Web##
 
