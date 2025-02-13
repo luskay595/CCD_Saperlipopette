@@ -7,17 +7,17 @@ CREATE SEQUENCE besoin_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1
 CREATE TABLE "public"."besoin" (
     "id" integer DEFAULT nextval('besoin_id_seq') NOT NULL,
     "libelle" text NOT NULL,
-    "client_nom" character(30) NOT NULL,
-    "competence_libelle" smallint NOT NULL,
+    "client_nom" text NOT NULL,
+    "competence_type" text NOT NULL,
     CONSTRAINT "besoin_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
-INSERT INTO "besoin" ("id", "libelle", "client_nom", "competence_libelle") VALUES
-(1,	'Nettoyage de Printemps',	'Dupont                        ',	1),
-(2,	'Réparation Électrique',	'Martin                        ',	3),
-(3,	'Aménagement Paysager',	'Bernard                       ',	1),
-(4,	'Rénovation de Cuisine',	'Durand                        ',	2),
-(5,	'Peinture Intérieure',	'Roux                          ',	4);
+INSERT INTO "besoin" ("id", "libelle", "client_nom", "competence_type") VALUES
+(1,	'Nettoyage de Printemps',	'Dupont',	'MN'),
+(2,	'Réparation Électrique',	'Martin',	'BR'),
+(3,	'Aménagement Paysager',	'Bernard',	'JD'),
+(4,	'Rénovation de Cuisine',	'Durand',	'BR'),
+(5,	'Peinture Intérieure',	'Roux',	'BR');
 
 DROP TABLE IF EXISTS "besoins_services";
 CREATE TABLE "public"."besoins_services" (
@@ -35,4 +35,4 @@ INSERT INTO "besoins_services" ("id_besoin", "id_service") VALUES
 
 ALTER TABLE ONLY "public"."besoins_services" ADD CONSTRAINT "besoins_bervices_id_besoin_fkey" FOREIGN KEY (id_besoin) REFERENCES besoin(id) NOT DEFERRABLE;
 
--- 2025-02-13 12:53:33.75695+00
+-- 2025-02-13 13:48:15.626147+00

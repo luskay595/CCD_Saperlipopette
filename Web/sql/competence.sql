@@ -8,14 +8,15 @@ CREATE TABLE "public"."competence" (
     "id" integer DEFAULT nextval('competence_id_seq') NOT NULL,
     "libelle" text NOT NULL,
     "description" text NOT NULL,
+    "type" text NOT NULL,
     CONSTRAINT "competence_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
-INSERT INTO "competence" ("id", "libelle", "description") VALUES
-(1,	'Jardinage',	'Compétence en entretien des espaces verts et plantations.'),
-(2,	'Plomberie',	'Compétence en installation et réparation des systèmes de plomberie.'),
-(3,	'Électricité',	'Compétence en installation et réparation des systèmes électriques.'),
-(4,	'Peinture',	'Compétence en application de peinture et finitions intérieures et extérieures.'),
-(5,	'Menuiserie',	'Compétence en fabrication et installation de meubles et structures en bois.');
+INSERT INTO "competence" ("id", "libelle", "description", "type") VALUES
+(1,	'Bricolage',	'Compétence en travaux manuels et réparations diverses.',	'BR'),
+(2,	'Jardinage',	'Compétence en entretien des espaces verts et plantations.',	'JD'),
+(3,	'Ménage',	'Compétence en nettoyage et entretien domestique.',	'MN'),
+(4,	'Informatique',	'Compétence en manipulation d’outils informatiques et résolution de problèmes techniques.',	'IF'),
+(5,	'Administratif',	'Compétence en accompagnement dans les démarches administratives.',	'AD');
 
--- 2025-02-13 12:54:02.969517+00
+-- 2025-02-13 13:49:53.532395+00
