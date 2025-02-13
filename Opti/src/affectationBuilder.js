@@ -8,10 +8,7 @@ export async function buildAffectation(categ, id) {
     let path = await findPath(categ, id)
 
     let problem = loadCSV(path)
-    console.log("BACKTRACKING")
-    let affectation = solveBacktracking(problem)
-    console.log(affectation.count)
-    console.log("EVALUATE")
+    let affectation = solveGlouton(problem)
     let score = evaluate(affectation)
 
     let fileContent = exportAffectationToString(affectation, score)
