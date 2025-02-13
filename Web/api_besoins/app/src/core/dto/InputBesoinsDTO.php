@@ -1,6 +1,6 @@
 <?php
 
-namespace api_beosins\core\dto;
+namespace api_besoins\core\dto;
 
 use api_besoins\core\dto\DTO;
 use api_besoins\core\domain\entities\Besoins\Besoin;
