@@ -1,7 +1,11 @@
 <?php
 
-use api_besoins\core\domain\entities\Besoins\Besoin;
 use Psr\Container\ContainerInterface;
+use api_besoins\core\services\besoins\ServiceBesoinsInterface;
+use api_besoins\core\services\besoins\ServiceBesoins;
+use api_besoins\application\actions\GetBesoinByIdAction;
+use api_besoins\application\actions\GetAllBesoinsAction;
+use api_besoins\application\actions\CreateBesoinAction;
 
 use api_besoins\infrastructure\repository\BesoinRepository;
 
@@ -17,6 +21,20 @@ return [
         return new BesoinRepository($c->get('pdo'));
     },
 
-    
+    ServiceBesoinsInterface::class => function(ContainerInterface $c) {
+        return new ServiceBesoins($c->get('repositoryBesoin'));
+    },
+
+    GetBesoinByIdAction::class => function(ContainerInterface $c) {
+        return new api_besoins\application\actions\GetBesoinByIdAction($c->get(ServiceBesoinsInterface::class));
+    },
+
+    GetAllBesoinsAction::class => function(ContainerInterface $c) {
+        return new api_besoins\application\actions\GetAllBesoinsAction($c->get(ServiceBesoinsInterface::class));
+    },
+
+    CreateBesoinAction::class => function(ContainerInterface $c) {
+        return new api_besoins\application\actions\CreateBesoinAction($c->get(ServiceBesoinsInterface::class), "logger");
+    },
 
 ];

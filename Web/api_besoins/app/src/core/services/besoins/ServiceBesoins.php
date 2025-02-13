@@ -1,6 +1,6 @@
 <?php
 
-namespace api_besoins\application\actions;
+namespace api_besoins\core\services\besoins;
 
 use api_besoins\core\services\besoins\ServiceBesoinsInterface;
 use api_besoins\infrastructure\repository\BesoinRepository;
@@ -12,6 +12,10 @@ class ServiceBesoins implements ServiceBesoinsInterface{
     
     public function __construct(BesoinRepository $repository){
         $this->repository = $repository;
+    }
+
+    public function getAllBesoins(): array{
+        return $this->repository->getAllBesoins();
     }
 
     public function getBesoinById(int $id): Besoin{
@@ -30,8 +34,8 @@ class ServiceBesoins implements ServiceBesoinsInterface{
         return $this->repository->getBesoinByCompetenceType($competence_type);
     }
 
-    public function createBesoin(int $id, string $libelle, string $client_nom, string $competence_type, array $services): void{
-        $this->repository->createBesoin($id, $libelle, $client_nom, $competence_type, $services);
+    public function createBesoin(string $libelle, string $client_nom, string $competence_type, array $services): void{
+        $this->repository->createBesoin($libelle, $client_nom, $competence_type, $services);
     }
 
 }

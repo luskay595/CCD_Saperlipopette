@@ -115,7 +115,7 @@ services:
       - ./api_besoins/app/:/var/php/
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_besoins:
     image: 'postgres:latest'

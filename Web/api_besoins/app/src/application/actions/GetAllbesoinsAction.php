@@ -6,7 +6,7 @@ use api_besoins\core\services\besoins\ServiceBesoinsInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class GetBesoinByIdAction extends AbstractAction
+class GetAllBesoinsAction extends AbstractAction
 {
 
     private ServiceBesoinsInterface $serviceBesoin;
@@ -19,11 +19,10 @@ class GetBesoinByIdAction extends AbstractAction
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
     {
         try{
-        $id = $args['id'];
-        $besoin = $this->serviceBesoin->getBesoinById($id);
+        $besoins = $this->serviceBesoin->getAllBesoins();
         $data = [
             'type' => 'ressource',
-            'besoin' => $besoin,
+            'besoins' => $besoins,
         ];
         return JSONRenderer::render($rs, 200, $data);
         }catch(\Exception $e){
