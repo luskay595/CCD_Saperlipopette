@@ -10,9 +10,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Installation de OpenConnect et sshpass
-    - name: Install OpenConnect and sshpass
-      run: sudo apt-get update && sudo apt-get install -y openconnect sshpass rsync
+    # Installation de OpenConnect et Expect (pour SSH avec password)
+    - name: Install OpenConnect and Expect
+      run: sudo apt-get update && sudo apt-get install -y openconnect expect rsync
 
     # Connexion au VPN AnyConnect
     - name: Connect to VPN
@@ -25,22 +25,31 @@ jobs:
 
     - name: Ensure remote directory exists
       run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-          mkdir -p /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette
+        expect -c "
+        spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"mkdir -p /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette\"
+        expect \"password:\"
+        send \"${{ secrets.SSH_PASSWORD }}\r\"
+        expect eof
         "
 
     # Copier tous les fichiers du dépôt + deploy.sh vers le serveur distant
     - name: Copy repository files to remote server
       run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
+        expect -c "
+        spawn rsync -avz --delete -e \"ssh -o StrictHostKeyChecking=no\" ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
+        expect \"password:\"
+        send \"${{ secrets.SSH_PASSWORD }}\r\"
+        expect eof
+        "
 
     # Assurer que le script est exécutable et l'exécuter
     - name: Run deployment script
       run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-          cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette &&
-          chmod +x deploy.sh &&
-          ./deploy.sh
+        expect -c "
+        spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette && chmod +x deploy.sh && ./deploy.sh\"
+        expect \"password:\"
+        send \"${{ secrets.SSH_PASSWORD }}\r\"
+        expect eof
         "
 
     # Déconnexion du VPN après le déploiement
