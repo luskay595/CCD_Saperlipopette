@@ -54,7 +54,7 @@ jobs:
     - name: Run deployment script
       run: |
         expect -c "
-        spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette && chmod +x deploy.sh && ./deploy.sh\"
+        spawn ssh -tt -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \"cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette && chmod +x deploy.sh && ./deploy.sh\"
         expect \"password:\"
         send \"${{ secrets.SSH_PASSWORD }}\r\"
         expect eof
