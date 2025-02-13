@@ -20,27 +20,12 @@
 - [Lien vers l'API de gestion de bd](http://docketu.iutnc.univ-lorraine.fr:40026/)
 - [Lien avec l'API front web](http://docketu.iutnc.univ-lorraine.fr:40025/)
 
-##  Partie application Web##
+##  Partie application Web ##
 
 ### Liste des numéros de fonctionnalités implantées ###
 
-<!-- Énumération de la liste, commentaires au besoin -->
-
-### Commentaires additionnels ###
-
-<!-- Indiquez toutes les données utiles au test (identifiants, mots de -->
-<!-- passes, données déjà saisies etc...), décrivez les éventuelles -->
-<!-- fonctionnalités additionnelles -->
-
-Il y avait du code que voilà :
-
-```
-git push -u origin main
-```
-
-Et une image aussi :
-
-![Texte alternatif](boite_cuisine.png "Logo officiel")
+- Création d'un besoin
+- Affichage de la liste de tous les besoins
 
 ##  Partie Optimisation ##
 
