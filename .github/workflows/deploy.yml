@@ -1,0 +1,58 @@
+name: Deploy with VPN and SSH
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Installation de OpenConnect et sshpass
+    - name: Install OpenConnect and sshpass
+      run: sudo apt-get update && sudo apt-get install -y openconnect sshpass rsync
+
+    # Connexion au VPN AnyConnect
+    - name: Connect to VPN
+      run: |
+        echo "${{ secrets.VPN_PASSWORD }}" | sudo openconnect --background --user=${{ secrets.VPN_USERNAME }} --passwd-on-stdin vpn.univ-lorraine.fr
+
+    # Attendre que la connexion VPN soit établie
+    - name: Wait for VPN connection
+      run: sleep 10 && curl ifconfig.me
+
+    # Copier les fichiers du dépôt sur le serveur distant
+    - name: Copy repository files to remote server
+      run: |
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
+
+    # Démarrer `docker-compose` dans `CCD_Saperlipopette/Web`
+    - name: Run docker-compose in Web directory
+      run: |
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+          cd /home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/Web && 
+          docker-compose up -d
+        "
+
+    # Arrêter l'ancien conteneur utilisant `mon-projet` dans `CCD_Saperlipopette/Opti`
+    - name: Stop old mon-projet container in Opti
+      run: |
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+          docker ps -q --filter ancestor=mon-projet | xargs -r docker stop
+        "
+
+    # Construire et exécuter `mon-projet` dans `CCD_Saperlipopette/Opti`
+    - name: Build and Run mon-projet in Opti
+      run: |
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+          cd /home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/Opti && 
+          docker build -t mon-projet . && 
+          docker run -d -p 40027:3000 mon-projet
+        "
+
+    # Déconnexion du VPN après le déploiement
+    - name: Disconnect VPN
+      if: always()
+      run: sudo pkill openconnect
