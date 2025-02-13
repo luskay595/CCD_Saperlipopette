@@ -1,22 +1,24 @@
 
 /**
- * Regle 1 (duree d une tache) : les besoins proposes par les clients prennent exactement
-une journee pour etre realises et ne necessitent qu une seule competence.
+clients = [
+    {"name" : "ALBERT", "needs" : {"type" : "BR", }]}
+]
 
-Regle 2a (journee de travail) : un salarie ne peut travailler que sur un seul besoin pendant
-une journee.
-
-Regle 2b (besoin mono-tache) : de maniere similaire, un besoin ne peut etre effectue
-qu une seule fois par journee et affecte qu a un seul salarie.
-
-Regle 3 (competence necessaire) : un salarie ne peut etre affecte qu a un besoin pour
-lequel il dispose de la competence requise.
-
-Regle 4 (gain lie a l interet pour la tache) : chaque affectation d un salarie a un besoin
-rapporte a l affectation un nombre de points lie a l interet que le salarie a pour le type du
-besoin. Ainsi, si Delphine est affectee a un besoin de jardinage pour lequel elle a emis un
-interet personnel de 8, cette partie de l affectation rapportera 8 points au score de
-l affectation globale.
+workers = [
+    {"name" : "JEAN",
+    "skills" : [{
+        "type" : "AA",
+        "preference" : 1
+    },
+    {"type" : "BA",
+    "preference" : 3
+    }]},
+    {"name" : "JILLE",
+    "skills" : {
+        "BA" : 2,
+        "AA" : 3
+    }}
+]
  */
 
 export function solveBacktracking(workers, clients) {
@@ -33,7 +35,7 @@ export function solveBacktracking(workers, clients) {
         if (nbNeedMax < clients[i].needs.length)
             nbNeedMax = clients[i].needs.length;
     }
-    
+
     for (let cycleCount = 0; cycleCount < nbNeedMax; cycleCount++) {
         for (let i = 0; i < clients.length; i++) {
             if (clients[i].needs.length <= nbNeedMax)
