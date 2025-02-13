@@ -23,11 +23,15 @@ jobs:
     - name: Wait for VPN connection
       run: sleep 10 && curl ifconfig.me
 
-    # Copier les fichiers du dépôt sur le serveur distant
+    - name: Ensure remote directory exists
+      run: |
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+          mkdir -p /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette
+        "
+
     - name: Copy repository files to remote server
       run: |
-            sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
-
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
 
     # Démarrer `docker-compose` dans `CCD_Saperlipopette/Web`
     - name: Run docker-compose in Web directory
