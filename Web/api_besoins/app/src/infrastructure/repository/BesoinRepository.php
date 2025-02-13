@@ -27,6 +27,21 @@ class BesoinRepository implements RepositoryBesoinInterface
         return new Besoin($besoin['id'], $besoin['libelle'], $besoin['client_nom'], $besoin['competence_type'], $services);
     }
 
+    //récupère tous les besoins dans la base de données
+    public function getAllBesoins(): array
+    {
+        $query = $this->db->query('SELECT * FROM besoin');
+        $besoins = $query->fetchAll();
+        $besoinsArray = [];
+        foreach ($besoins as $besoin) {
+            $query = $this->db->prepare('SELECT * FROM besoins_services WHERE id_besoin = :id_besoin');
+            $query->execute(['id_besoin' => $besoin['id']]);
+            $services = $query->fetchAll();
+            $besoinsArray[] = new Besoin($besoin['id'], $besoin['libelle'], $besoin['client_nom'], $besoin['competence_type'], $services);
+        }
+        return $besoinsArray;
+    }
+
     //récupère un besoin par son libellé dans la base de données
     public function getBesoinByLibelle($libelle): Besoin
     {
@@ -64,7 +79,7 @@ class BesoinRepository implements RepositoryBesoinInterface
     }
 
     //crée un besoin dans la base de données
-    public function createBesoin(int $id, string $libelle, string $client_nom, string $competence_type, array $services): void
+    public function createBesoin(string $libelle, string $client_nom, string $competence_type, array $services): void
     {
         $query = $this->db->prepare('INSERT INTO besoin (libelle, client_nom, competence_type) VALUES (:libelle, :client_nom, :competence_type)');
         $query->execute([
@@ -72,8 +87,9 @@ class BesoinRepository implements RepositoryBesoinInterface
             'client_nom' => $client_nom,
             'competence_type' => $competence_type,
         ]);
+        $id = $this->db->lastInsertId();
         foreach ($services as $service) {
-            $query = $this->db->prepare('INSERT INTO besoin_services (id_besoin, id_service) VALUES (:id_besoin, :id_service)');
+            $query = $this->db->prepare('INSERT INTO besoins_services (id_besoin, id_service) VALUES (:id_besoin, :id_service)');
             $query->execute([
                 'id_besoin' => $id,
                 'id_service' => $service->id,

@@ -14,6 +14,10 @@ class ServiceBesoins implements ServiceBesoinsInterface{
         $this->repository = $repository;
     }
 
+    public function getAllBesoins(): array{
+        return $this->repository->getAllBesoins();
+    }
+
     public function getBesoinById(int $id): Besoin{
         return $this->repository->getBesoinById($id);
     }
@@ -30,8 +34,8 @@ class ServiceBesoins implements ServiceBesoinsInterface{
         return $this->repository->getBesoinByCompetenceType($competence_type);
     }
 
-    public function createBesoin(int $id, string $libelle, string $client_nom, string $competence_type, array $services): void{
-        $this->repository->createBesoin($id, $libelle, $client_nom, $competence_type, $services);
+    public function createBesoin(string $libelle, string $client_nom, string $competence_type, array $services): void{
+        $this->repository->createBesoin($libelle, $client_nom, $competence_type, $services);
     }
 
 }
