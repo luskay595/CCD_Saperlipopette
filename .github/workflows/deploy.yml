@@ -26,7 +26,8 @@ jobs:
     # Copier les fichiers du dépôt sur le serveur distant
     - name: Copy repository files to remote server
       run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
+            sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/
+
 
     # Démarrer `docker-compose` dans `CCD_Saperlipopette/Web`
     - name: Run docker-compose in Web directory
