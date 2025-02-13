@@ -2,14 +2,15 @@
 
 namespace api_clients\application\actions;
 
+use api_besoins\application\actions\AbstractAction;
 use Error;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use api_clients\application\renderer\JsonRenderer;
+use renderer\JsonRenderer;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
 use api_clients\core\dto\ClientDTO;
-use api_clients\core\services\clients\ServiceClients;
+use api_clients\application\actions\ServiceClients;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 
