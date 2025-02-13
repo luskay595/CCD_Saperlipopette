@@ -1,10 +1,10 @@
-# Infrastructure de Déploiement
+# Partie Infrastructure de Déploiement
 
 Ce projet a été conçu et mis en place par **VANNESTE Lucas (DACS)**.
 
 ## 📌 Contexte et Choix Techniques
 
-Initialement, nous avons voulu utiliser **Google Cloud Run** pour le déploiement. Cependant, Cloud Run ne prend pas en charge **Docker Compose**, ce qui nous a poussé à nous tourner vers **Docketu**.
+Initialement, nous avons voulu utiliser **Google Cloud Run** pour le déploiement. Cependant, Cloud Run ne prend pas en charge **Docker Compose**, ce qui nous a poussé à nous tourner vers **Docketu**. 
 
 Docketu nous permet d'exécuter des conteneurs Docker, mais impose des restrictions sur les commandes Docker exécutées en mode terminal non interactif. Cela a eu un impact sur notre gestion du déploiement via GitHub Actions, nous obligeant à trouver une solution alternative.
 
@@ -19,9 +19,14 @@ Le fichier [`deploy.yml`](./deploy.yml) définit un workflow GitHub Actions qui 
 2. **Installation des dépendances** : `openconnect`, `sshpass` et `rsync`.
 3. **Connexion au VPN AnyConnect** pour accéder au serveur distant.
 4. **Synchronisation des fichiers** du dépôt vers le serveur via `rsync`.
-5. **Déconnexion du VPN** une fois le déploiement terminé.
+5. **Démarrage des services avec Docker Compose** dans `CCD_Saperlipopette/Web`.
+6. **Arrêt et suppression de l'ancien conteneur** de `mon-projet`.
+7. **Reconstruction et redémarrage** de l’image Docker `mon-projet` dans `CCD_Saperlipopette/Opti`.
+8. **Déconnexion du VPN** une fois le déploiement terminé.
 
 📄 [Voir le fichier deploy.yml](./deploy.yml)
+
+⚠️ **Le GitHub Action tourne sur mon fork du dépôt** afin de garantir la sécurité des **secrets de connexion** qui ne sont pas visibles publiquement. Cela permet également de **vérifier qu'il n'y a pas de commit problématique** avant d'intégrer les changements dans la branche principale sur docketu.
 
 ---
 

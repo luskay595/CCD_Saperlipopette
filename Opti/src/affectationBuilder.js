@@ -1,14 +1,22 @@
-import { loadCSV } from "./loadCSV.js";
+import { loadCSV, findPath } from "./loadCSV.js";
 import { solveGlouton } from "./problemSolvers/solveGlouton.js";
+import { solveBacktracking } from "./problemSolvers/solveBacktracking.js";
 import { evaluate } from "./evaluator.js";
-import { exportAffectationToString } from "./affectationParser.js";
+import { exportAffectationToString, exportAffectationToCSV } from "./affectationParser.js";
 
-export function buildAffectation(path) {
+export async function buildAffectation(categ, id) {
+    let path = await findPath(categ, id)
+
     let problem = loadCSV(path)
-    let affectation = solveGlouton(problem);
-    let score = evaluate(affectation);
+    console.log("BACKTRACKING")
+    let affectation = solveBacktracking(problem)
+    console.log(affectation.count)
+    console.log("EVALUATE")
+    let score = evaluate(affectation)
 
-    let fileContent = exportAffectationToString(affectation, score);
+    let fileContent = exportAffectationToString(affectation, score)
+
+    let file = exportAffectationToCSV("./test.csv", affectation, score)
 
     return fileContent
 }

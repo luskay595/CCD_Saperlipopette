@@ -10,9 +10,14 @@ const port = 3000;
 app.use(express.json());
 
 // Route simple
-app.get('/', (req, res) => {
-  //
-  res.send(buildAffectation("./data/01_pb_simples/Probleme_1_nbSalaries_3_nbClients_3_nbTaches_2.csv"));
+app.get('/pb_simple/:id', async (req, res) => {
+  const id = req.params.id;
+  res.send(await buildAffectation("pb_simple", id));
+});
+
+app.get('/pb_complexe/:id', async (req, res) => {
+  const id = req.params.id;
+  res.send(await buildAffectation("pb_complexe", id));
 });
 
 // Gestion des erreurs
@@ -23,7 +28,6 @@ app.use((err, req, res, next) => {
 
 // Démarrer le serveur
 app.listen(port, () => {
-  console.log(`Serveur démarré sur http://localhost:${port}`);
-  let res = buildAffectation("./data/01_pb_simples/Probleme_1_nbSalaries_3_nbClients_3_nbTaches_2.csv");
-  //console.log(res);
+  console.log("Démarrage du serveur");
+  buildAffectation("pb_simple", 1);
 });

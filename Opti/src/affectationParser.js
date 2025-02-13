@@ -1,4 +1,5 @@
 // import { parse } from "papaparse";
+import fs from 'fs';
 
 /**
  *  let affectations = {};
@@ -27,6 +28,6 @@ export function exportAffectationToCSV(filename, affectation, score) {
     let csvContent = exportAffectationToString(affectation, score);
 
     // Écrire dans le fichier
-    fs.writeFileSync(filename + ".csv", csvContent, "utf8");
+    fs.writeFileSync(filename, csvContent, "utf8");
     return fs
 }
