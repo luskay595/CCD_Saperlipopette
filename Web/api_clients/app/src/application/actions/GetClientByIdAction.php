@@ -1,11 +1,11 @@
 <?php
 namespace api_clients\application\actions;
 
-use AbstractAction;
-use renderer\JsonRenderer;
-use api_clients\application\actions\ServiceClients;
+use api_clients\application\renderer\JsonRenderer;
+use api_clients\core\services\clients\ServiceClients;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use api_clients\application\actions\AbstractAction;
 
 class GetClientByIdAction extends AbstractAction
 {

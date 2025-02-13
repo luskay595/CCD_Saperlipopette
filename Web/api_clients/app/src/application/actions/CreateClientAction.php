@@ -2,7 +2,7 @@
 
 namespace api_clients\application\actions;
 
-use api_besoins\application\actions\AbstractAction;
+use api_clients\application\actions\AbstractAction;
 use Error;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,7 +10,7 @@ use renderer\JsonRenderer;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
 use api_clients\core\dto\ClientDTO;
-use api_clients\application\actions\ServiceClients;
+use api_clients\core\services\clients\ServiceClients;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 
@@ -31,18 +31,20 @@ class CreateClientAction extends AbstractAction
         $jsonClient = $rq->getParsedBody();
 
         // Validate input
-        $clientInputValidator = v::key('id', v::intVal()->notEmpty())
-            ->key('nom', v::stringType()->notEmpty());
+        $clientInputValidator = v::key('nom', v::stringType()->notEmpty());
 
         try {
             $clientInputValidator->assert($jsonClient);
 
+            //ramsey/uuid
+            $uuid = \Ramsey\Uuid\Uuid::uuid4();
+
             // Create ClientDTO object
             $client = new ClientDTO(
-                $jsonClient['id'],
+                $uuid->toString(),
                 $jsonClient['nom'],
-                $jsonClient['email']
             );
+            
 
             // Call service to create client
             $this->serviceClients->createClient(

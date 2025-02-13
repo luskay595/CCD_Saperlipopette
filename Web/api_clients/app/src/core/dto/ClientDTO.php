@@ -7,23 +7,28 @@ use api_clients\core\domain\entities\Clients\Client;
 
 class ClientDTO extends DTO
 {
-    protected int $id;
+    protected string $id;
     protected string $nom;
 
-    public function __construct(int $id, string $nom, string $email)
+    public function __construct(string $id, string $nom)
     {
         $this->id = $id;
         $this->nom = $nom;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getnom(): string
+    public function getNom(): string
     {
         return $this->nom;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 
 
