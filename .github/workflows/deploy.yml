@@ -38,7 +38,7 @@ jobs:
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
           cd /users/home/${{ secrets.SSH_USERNAME }}/CCD_Saperlipopette/Web && 
-          docker-compose up -d
+          docker compose up -d
         "
 
     - name: Stop old mon-projet container in Opti
