@@ -59,7 +59,7 @@ services:
     working_dir: /var/php
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
   auth.db:
     image: 'postgres:latest'
@@ -87,7 +87,7 @@ services:
       - ./api_clients/app/:/var/php/
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_clients:
     image: 'postgres:latest'
@@ -143,7 +143,7 @@ services:
       - ./api_services/app/:/var/php/
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_services:
     image: 'postgres:latest'
@@ -171,7 +171,7 @@ services:
       - ./api_competences/app/:/var/php/
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_competences:
     image: 'postgres:latest'
@@ -199,7 +199,7 @@ services:
       - ./api_salaries/app/:/var/php/
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
 
   db_salaries:
     image: 'postgres:latest'
@@ -227,4 +227,4 @@ services:
     working_dir: /var/php
     networks:
       - serviceDating
-    command: php -S 0.0.0.0:80 -t /var/php
+    command: php -S 0.0.0.0:80 -t /var/php/public
